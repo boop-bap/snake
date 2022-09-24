@@ -1,38 +1,49 @@
-<template >
+<template>
   <div class="garden">
     <div :style="{ top, left }" class="test">
       <Snake ref="snake" @upDown="upDown" @leftRight="leftRight" />
     </div>
     <button @click="stopInterval">asdasd</button>
-    <a-input>asd</a-input>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import Snake from "../components/Snake.vue";
+
+interface ComponentData {
+  xPosition: number;
+  yPosition: number;
+  direction: any;
+  interval?: any;
+  intervalSpeed: number;
+  loading: boolean;
+}
+
 export default Vue.extend({
   components: {
     Snake,
   },
 
-  data() {
+  data(): ComponentData {
     return {
-      keyUpCount: 0,
       xPosition: 0,
       yPosition: 0,
       direction: null,
-      currentDirection: "",
       interval: null,
-      intervalSpeed: 100,
+      intervalSpeed: 500,
+      loading: true,
     };
   },
+
   methods: {
-    stopInterval() {
+    stopInterval(): void {
       clearInterval(this.interval);
     },
 
-    leftRight(event) {
+    leftRight(event: string) {
+      console.log(123);
+
       this.stopInterval();
 
       const moveRight = () => {
@@ -62,7 +73,7 @@ export default Vue.extend({
       this.interval = setInterval(this.direction, this.intervalSpeed);
     },
 
-    upDown(event) {
+    upDown(event: string) {
       this.stopInterval();
 
       const moveUp = () => {
@@ -93,10 +104,10 @@ export default Vue.extend({
     },
   },
   computed: {
-    top() {
+    top(): string {
       return this.yPosition + "px";
     },
-    left() {
+    left(): string {
       return this.xPosition + "px";
     },
   },
@@ -110,6 +121,7 @@ export default Vue.extend({
   background: cornflowerblue;
   z-index: 10000;
   position: relative;
+  margin: 0 auto;
 }
 .test {
   width: 50px;
