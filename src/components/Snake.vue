@@ -24,10 +24,7 @@ export default vue.extend({
 
       if (this.shouldMove) {
         this.currentDirection = event.key;
-        if (event.key === "ArrowUp" || event.key === "ArrowDown")
-          this.$emit("upDown", event.key);
-        if (event.key === "ArrowLeft" || event.key === "ArrowRight")
-          this.$emit("leftRight", event.key);
+        this.$emit("move", event.key);
       }
     },
   },
