@@ -101,7 +101,7 @@ export default Vue.extend({
         if (JSON.stringify(val) === JSON.stringify(this.foodPosition)) {
           this.snakeLength += 300;
           if (this.feedingInterval) {
-            console.log(123);
+            // sometimes multiple food placements happen, need to solve.
             this.stopInterval(this.feedingInterval);
             this.placeFood();
 
