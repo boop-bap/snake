@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="startFeeding">Feed</button>
     <button @click="reset">reset</button>
     {{ this.snake.length }}
     {{ currentPosition }}
@@ -131,7 +130,7 @@ export default Vue.extend({
           this.reRunFoodInterval();
         }
 
-        // Self cannibalism || free food
+        // Self cannibalism || free food?
         for (const [index, snakePart] of this.snake.entries()) {
           if (JSON.stringify(val) === JSON.stringify(snakePart)) {
             this.stopAll();
@@ -155,6 +154,7 @@ export default Vue.extend({
     setFocus() {
       (this.$refs.snake as any).$el.focus();
     },
+
     startFeeding() {
       if (!this.isFeeding) {
         this.isFeeding = true;
@@ -170,6 +170,14 @@ export default Vue.extend({
       this.stopInterval(this.feedingInterval);
       this.placeFood();
       this.feedingInterval = setInterval(this.placeFood, 3000);
+    },
+
+    placeFood() {
+      const randomY = Math.floor(Math.random() * 10) * 25;
+      const randomX = Math.floor(Math.random() * 10) * 25;
+
+      this.foodPosition.y = randomY;
+      this.foodPosition.x = randomX;
     },
 
     stopAll() {
@@ -205,8 +213,37 @@ export default Vue.extend({
       this.feedingInterval = null;
     },
 
-    stopInterval(interval): void {
-      clearInterval(interval);
+    move(event: string) {
+      if (!this.isSnakeDisabled) {
+        this.startFeeding();
+
+        this.stopInterval(this.headMoveInterval);
+        this.stopInterval(this.snakeRemoveInterval);
+        this.stopInterval(this.snakeAddInterval);
+
+        this.snakeRemoveInterval = setInterval(
+          this.removeSnake,
+          this.intervalSpeed
+        );
+        this.snakeAddInterval = setInterval(this.addSnake, this.intervalSpeed);
+
+        if (event === "ArrowRight") {
+          this.intervalDirection = this.moveRight;
+        } else if (event === "ArrowLeft") {
+          this.intervalDirection = this.moveLeft;
+        } else if (event === "ArrowUp") {
+          this.intervalDirection = this.moveUp;
+        } else if (event === "ArrowDown") {
+          this.intervalDirection = this.moveDown;
+        } else {
+          this.intervalDirection = null;
+        }
+
+        this.headMoveInterval = setInterval(
+          this.intervalDirection,
+          this.intervalSpeed
+        );
+      }
     },
 
     moveRight() {
@@ -259,45 +296,8 @@ export default Vue.extend({
       }, this.snakeLength);
     },
 
-    move(event: string) {
-      if (!this.isSnakeDisabled) {
-        this.startFeeding();
-
-        this.stopInterval(this.headMoveInterval);
-        this.stopInterval(this.snakeRemoveInterval);
-        this.stopInterval(this.snakeAddInterval);
-
-        this.snakeRemoveInterval = setInterval(
-          this.removeSnake,
-          this.intervalSpeed
-        );
-        this.snakeAddInterval = setInterval(this.addSnake, this.intervalSpeed);
-
-        if (event === "ArrowRight") {
-          this.intervalDirection = this.moveRight;
-        } else if (event === "ArrowLeft") {
-          this.intervalDirection = this.moveLeft;
-        } else if (event === "ArrowUp") {
-          this.intervalDirection = this.moveUp;
-        } else if (event === "ArrowDown") {
-          this.intervalDirection = this.moveDown;
-        } else {
-          this.intervalDirection = null;
-        }
-
-        this.headMoveInterval = setInterval(
-          this.intervalDirection,
-          this.intervalSpeed
-        );
-      }
-    },
-
-    placeFood() {
-      const randomY = Math.floor(Math.random() * 10) * 25;
-      const randomX = Math.floor(Math.random() * 10) * 25;
-
-      this.foodPosition.y = randomY;
-      this.foodPosition.x = randomX;
+    stopInterval(interval): void {
+      clearInterval(interval);
     },
   },
 });
