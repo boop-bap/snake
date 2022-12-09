@@ -16,17 +16,13 @@ export default Vue.extend({
       default: "whitegg.svg",
     },
   },
-
-  // data(): ComponentData {
-  //   return {};
-  // },
 });
 </script>
 
 <style lang="scss" scoped>
 .food {
-  width: 50px;
-  height: 50px;
+  width: 25px;
+  height: 25px;
   img {
     width: 100%;
     height: 100%;

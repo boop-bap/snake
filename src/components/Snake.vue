@@ -70,8 +70,8 @@ export default vue.extend({
 
 <style lang="scss" scoped>
 .snake {
-  width: 50px;
-  height: 50px;
+  width: 25px;
+  height: 25px;
   background: purple;
   text-align: center;
 }
