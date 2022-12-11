@@ -1,8 +1,14 @@
 <template>
   <div>
     <button @click="reset">reset</button>
-    {{ this.snake.length }}
-    {{ currentPosition }}
+    <!-- <select v-show="false" v-model="intervalSpeed">
+      <option :value="200">0.5x speed</option>
+      <option :value="133">0.75x speed</option>
+      <option selected :value="100">1x speed</option>
+      <option :value="50">2x speed</option>
+      <option :value="33">3x speed</option>
+      <option :value="25">4x speed</option>
+    </select> -->
 
     <div
       :style="{ height: arenaHeight + 'px', width: arenaWidth + 'px' }"
@@ -10,14 +16,18 @@
       @click="setFocus"
     >
       <div
+        v-if="headMoveInterval"
         class="movable"
         :style="{ top: foodPosition.y + 'px', left: foodPosition.x + 'px' }"
       >
         <Food />
       </div>
 
-      <div :style="{ top, left }" class="movable">
-        <Snake ref="snake" @move="move" />
+      <div
+        :style="{ top, left, transform: `rotate(${snakeHeadRotationDeg}deg)` }"
+        class="movable"
+      >
+        <SnakeHead ref="snake" @move="move" />
       </div>
 
       <div
@@ -26,7 +36,7 @@
         :style="{ top: snakeBlock.y + 'px', left: snakeBlock.x + 'px' }"
         class="hello"
       >
-        <Snake />
+        <SnakeBody />
       </div>
     </div>
   </div>
@@ -34,7 +44,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Snake from "../components/Snake.vue";
+import SnakeHead from "../components/SnakeHead.vue";
+import SnakeBody from "../components/SnakeBody.vue";
 import Food from "../components/Food.vue";
 
 interface ComponentData {
@@ -56,19 +67,22 @@ interface ComponentData {
     x: number;
     y: number;
   };
-
+  snakeHeadRotationDeg: number;
   intervalSpeed: number;
   snakeLength: number;
   arenaWidth: number;
   arenaHeight: number;
 
   snake: { y: number | string; x: number | string }[];
+
+  test: any;
 }
 
 export default Vue.extend({
   components: {
-    Snake,
+    SnakeHead,
     Food,
+    SnakeBody,
   },
 
   data(): ComponentData {
@@ -95,12 +109,14 @@ export default Vue.extend({
       },
 
       //length and interval speed has to match
+      snakeHeadRotationDeg: 270,
       intervalSpeed: 100,
       snakeLength: 100,
       arenaWidth: 500,
       arenaHeight: 500,
 
       snake: [],
+      test: "",
     };
   },
 
@@ -117,6 +133,13 @@ export default Vue.extend({
   },
 
   watch: {
+    intervalSpeed: {
+      handler(newVal, oldVal) {
+        console.log(oldVal, newVal);
+      },
+      deep: true,
+    },
+
     snakeHeadPosition: {
       handler(val) {
         //Trying to escape this prison
@@ -211,10 +234,13 @@ export default Vue.extend({
       this.headMoveInterval = null;
 
       this.feedingInterval = null;
+
+      this.snakeHeadRotationDeg = 270;
     },
 
-    move(event: string) {
+    move(direction: string, rotationDeg: number) {
       if (!this.isSnakeDisabled) {
+        this.snakeHeadRotationDeg = rotationDeg;
         this.startFeeding();
 
         this.stopInterval(this.headMoveInterval);
@@ -227,13 +253,13 @@ export default Vue.extend({
         );
         this.snakeAddInterval = setInterval(this.addSnake, this.intervalSpeed);
 
-        if (event === "ArrowRight") {
+        if (direction === "ArrowRight") {
           this.intervalDirection = this.moveRight;
-        } else if (event === "ArrowLeft") {
+        } else if (direction === "ArrowLeft") {
           this.intervalDirection = this.moveLeft;
-        } else if (event === "ArrowUp") {
+        } else if (direction === "ArrowUp") {
           this.intervalDirection = this.moveUp;
-        } else if (event === "ArrowDown") {
+        } else if (direction === "ArrowDown") {
           this.intervalDirection = this.moveDown;
         } else {
           this.intervalDirection = null;
@@ -311,13 +337,13 @@ export default Vue.extend({
   margin: 0 auto;
 }
 .movable {
-  width: 50px;
-  height: 50px;
+  width: 25px;
+  height: 25px;
   position: absolute;
 }
 .hello {
-  width: 50px;
-  height: 50px;
+  width: 25px;
+  height: 25px;
   position: absolute;
 }
 </style>

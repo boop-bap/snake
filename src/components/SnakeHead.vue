@@ -1,5 +1,7 @@
 <template>
-  <div @keydown="move" tabindex="0" id="123" class="snake">Snake</div>
+  <div @keydown="move" tabindex="0" id="123" class="snake">
+    <img src="../assets/img/snakeHead.png" alt="snake head" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -7,24 +9,39 @@ import vue from "vue";
 
 interface ComponentData {
   currentDirection: string;
-  desirecDirection: string;
+  desiredDirection: string;
+  rotationDeg: number;
 }
 export default vue.extend({
-  name: "Snake",
+  name: "SnakeHead",
 
   data(): ComponentData {
     return {
       currentDirection: "",
-      desirecDirection: "",
+      desiredDirection: "",
+      rotationDeg: 90,
     };
   },
   methods: {
     move(event) {
-      this.desirecDirection = event.key;
+      this.desiredDirection = event.key;
 
       if (this.shouldMove) {
+        if (this.desiredDirection === "ArrowRight") {
+          this.rotationDeg = 270;
+        }
+        if (this.desiredDirection === "ArrowLeft") {
+          this.rotationDeg = 90;
+        }
+        if (this.desiredDirection === "ArrowUp") {
+          this.rotationDeg = 180;
+        }
+        if (this.desiredDirection === "ArrowDown") {
+          this.rotationDeg = 0;
+        }
+
         this.currentDirection = event.key;
-        this.$emit("move", event.key);
+        this.$emit("move", event.key, this.rotationDeg);
       }
     },
   },
@@ -36,28 +53,28 @@ export default vue.extend({
       }
 
       if (
-        this.desirecDirection === "ArrowLeft" &&
+        this.desiredDirection === "ArrowLeft" &&
         this.currentDirection === "ArrowRight"
       ) {
         return false;
       }
 
       if (
-        this.desirecDirection === "ArrowRight" &&
+        this.desiredDirection === "ArrowRight" &&
         this.currentDirection === "ArrowLeft"
       ) {
         return false;
       }
 
       if (
-        this.desirecDirection === "ArrowUp" &&
+        this.desiredDirection === "ArrowUp" &&
         this.currentDirection === "ArrowDown"
       ) {
         return false;
       }
 
       if (
-        this.desirecDirection === "ArrowDown" &&
+        this.desiredDirection === "ArrowDown" &&
         this.currentDirection === "ArrowUp"
       ) {
         return false;
@@ -72,7 +89,10 @@ export default vue.extend({
 .snake {
   width: 25px;
   height: 25px;
-  background: purple;
   text-align: center;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
