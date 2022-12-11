@@ -53,9 +53,11 @@ interface ComponentData {
   isFeeding: boolean;
 
   snakeRemoveInterval: unknown;
+  // eslint-disable-next-line
   intervalDirection: any;
   snakeAddInterval: unknown;
   feedingInterval: unknown;
+  // eslint-disable-next-line
   headMoveInterval: any;
 
   snakeHeadPosition: {
@@ -74,8 +76,6 @@ interface ComponentData {
   arenaHeight: number;
 
   snake: { y: number | string; x: number | string }[];
-
-  test: any;
 }
 
 export default Vue.extend({
@@ -116,7 +116,6 @@ export default Vue.extend({
       arenaHeight: 500,
 
       snake: [],
-      test: "",
     };
   },
 
@@ -175,6 +174,7 @@ export default Vue.extend({
 
   methods: {
     setFocus() {
+      // eslint-disable-next-line
       (this.$refs.snake as any).$el.focus();
     },
 
