@@ -22,8 +22,10 @@
 		"types": ["webpack-env", "@types/node", ],
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
+	
 	"exclude": ["**/node_modules", "**/dist"],
 	"ts-node": {
 		"esm": true
 	}
 }
+
