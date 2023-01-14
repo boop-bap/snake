@@ -5,7 +5,7 @@
       Please login, or continue as guest
       <input type="email" placeholder="Email" v-model="user.email" />
       <input type="password" placeholder="Password" v-model="user.password" />
-      <button @click="userLogin">Log in</button>
+      <button @click="userLogin">Login</button>
       <p>or</p>
       <button>Continue as guest</button>
     </div>
