@@ -184,8 +184,8 @@ export default Vue.extend({
 
         this.placeFood();
         setTimeout(() => {
-          this.feedingInterval = setInterval(this.placeFood, 3000);
-        }, 3000);
+          this.feedingInterval = setInterval(this.placeFood, 4000);
+        }, 4000);
       }
     },
 

@@ -28,9 +28,5 @@
 </style>
 <script lang="ts">
 import Vue from "vue";
-export default Vue.extend({
-  created() {
-    this.$router.push("garden");
-  },
-});
+export default Vue.extend({});
 </script>
