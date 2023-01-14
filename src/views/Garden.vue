@@ -108,7 +108,7 @@ export default Vue.extend({
         y: 0,
       },
 
-      //length and interval speed has to match
+      // length and interval speed has to match
       snakeHeadRotationDeg: 270,
       intervalSpeed: 100,
       snakeLength: 100,
