@@ -1,76 +1,122 @@
 <template>
-  <div class="register">
-    <h1>register</h1>
-    <div class="register-form">
-      Please register, or continue as guest
-      <input type="email" placeholder="Email" v-model="user.email" />
-      <input type="text" placeholder="In-game name" v-model="user.name" />
+  <section class="bg-gray-50 dark:bg-gray-900">
+    <div
+      class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+    >
+      <div
+        class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+      >
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <a href="/main">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-8 h-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </a>
 
-      <input type="password" placeholder="Password" v-model="user.password" />
-      <button @click="userRegistration">Register</button>
-      <p>or</p>
-      <button>Continue as guest</button>
+          <h1
+            class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+          >
+            Register
+          </h1>
+          <form class="space-y-4 md:space-y-6" action="#">
+            <div>
+              <label
+                for="name"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Your name</label
+              >
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Name"
+                required="true"
+              />
+            </div>
+            <div>
+              <label
+                for="email"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Your email</label
+              >
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Name@company.com"
+                required="true"
+              />
+            </div>
+            <div>
+              <label
+                for="password"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Password</label
+              >
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="••••••••"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required="true"
+              />
+            </div>
+
+            <div>
+              <input
+                type="password"
+                name="password-confirm"
+                id="password-repconfirmeat"
+                placeholder="Confirm your password"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required="true"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            >
+              Register
+            </button>
+            <p
+              class="text-sm font-light text-gray-500 dark:text-gray-400 text-center flex flex-col items-center justify-center"
+            >
+              <span>
+                Already have an account?
+                <a
+                  href="/login"
+                  class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  >Login</a
+                >
+              </span>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
-import firebase from "firebase";
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { auth } from "@/firebase";
 
-interface ComponentData {
-  user: {
-    name: string;
-    email: string;
-    password: string;
-  };
-}
-
-export default Vue.extend({
-  components: {},
-
-  data(): ComponentData {
-    return {
-      user: {
-        name: "",
-        email: "",
-        password: "",
-      },
-    };
-  },
-
-  computed: {},
-
-  methods: {
-    userRegistration() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.user.email, this.user.password)
-        .then((res) => {
-          res.user
-            .updateProfile({
-              displayName: this.user.name,
-            })
-            .then(() => {
-              this.$router.push("/login");
-            });
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    },
-  },
+export default defineComponent({
+  setup() {},
 });
 </script>
-
-<style lang="scss" scoped>
-.register {
-  width: 500px;
-  height: 500px;
-  background: grey;
-  .register-form {
-    display: flex;
-    flex-direction: column;
-  }
-}
-</style>

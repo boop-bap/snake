@@ -1,6 +1,7 @@
 <template>
   <div>
-    <button @click="reset">reset</button>
+    <h1>asdasdas</h1>
+    <!-- <button @click="reset">reset</button> -->
     <!-- <select v-show="false" v-model="intervalSpeed">
       <option :value="200">0.5x speed</option>
       <option :value="133">0.75x speed</option>
@@ -10,7 +11,7 @@
       <option :value="25">4x speed</option>
     </select> -->
 
-    <div
+    <!-- <div
       :style="{ height: arenaHeight + 'px', width: arenaWidth + 'px' }"
       class="garden"
       @click="setFocus"
@@ -38,15 +39,15 @@
       >
         <SnakeBody />
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
-<script lang="ts">
+<!-- <script lang="ts">
 import Vue from "vue";
-import SnakeHead from "../components/SnakeHead.vue";
-import SnakeBody from "../components/SnakeBody.vue";
-import Food from "../components/Food.vue";
+import SnakeHead from "./SnakeHead.vue";
+import SnakeBody from "./SnakeBody.vue";
+import Food from "./Food.vue";
 
 interface ComponentData {
   isSnakeDisabled: boolean;
@@ -346,4 +347,4 @@ export default Vue.extend({
   height: 25px;
   position: absolute;
 }
-</style>
+</style>  -->

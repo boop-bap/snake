@@ -1,30 +1,45 @@
-import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
-Vue.use(VueRouter);
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: "",
+      redirect: "/main",
+    },
+    {
+      path: "/main",
+      name: "MainOverview",
+      component: () => import("@/views/MainOverview.vue"),
+    },
 
-const routes: Array<RouteConfig> = [
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("../views/Login.vue"),
-  },
-  {
-    path: "/register",
-    name: "Register",
-    component: () => import("../views/Register.vue"),
-  },
-  {
-    path: "",
-    name: "Garden",
-    component: () => import("../views/Garden.vue"),
-  },
-];
-
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes,
+    {
+      path: "/login",
+      name: "Login",
+      component: () => import("@/views/Login.vue"),
+    },
+    {
+      path: "/register",
+      name: "Register",
+      component: () => import("@/views/Register.vue"),
+    },
+    {
+      path: "/user",
+      name: "UserPage",
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import("@/views/UserPage.vue"),
+    },
+    {
+      path: "/garden",
+      name: "Garden",
+      meta: {
+        requiresAuth: true,
+      },
+      component: () => import("@/components/Garden.vue"),
+    },
+  ],
 });
 
 export default router;

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div @keydown="move" tabindex="0" id="123" class="snake">
     <img src="../assets/img/snakeHead.png" alt="snake head" />
   </div>
@@ -95,4 +95,4 @@ export default vue.extend({
     height: 100%;
   }
 }
-</style>
+</style> -->

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="food">
     <img :src="require(`../assets/svg/${foodType}`)" alt="white egg alt" />
   </div>
@@ -28,4 +28,4 @@ export default Vue.extend({
     height: 100%;
   }
 }
-</style>
+</style> -->

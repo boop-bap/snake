@@ -1,31 +1,14 @@
-import Vue from "vue";
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+
 import App from "./App.vue";
 import router from "./router";
-import store from "./store";
-import firebase from 'firebase/app';
 
-Vue.config.productionTip = false;
+import "./assets/tailwind.css";
 
-const firebaseConfig = {
+const app = createApp(App);
 
-  apiKey: "AIzaSyBIwjhCx39nZoPtc6Cv0pIk6CmivQRQfvA",
+app.use(createPinia());
+app.use(router);
 
-  authDomain: "snake-one.firebaseapp.com",
-
-  projectId: "snake-one",
-
-  storageBucket: "snake-one.appspot.com",
-
-  messagingSenderId: "192320646319",
-
-  appId: "1:192320646319:web:ae197cbfc1eb25752e385a"
-
-};
-
-firebase.initializeApp(firebaseConfig);
-
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount("#app");
+app.mount("#app");
