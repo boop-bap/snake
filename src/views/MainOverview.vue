@@ -4,18 +4,18 @@
   <BottomNav />
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import TopNav from "@/components/TopNav.vue";
+<script setup lang="ts">
+import { onMounted } from "vue";
+// import TopNav from "@/components/TopNav.vue";
 import BottomNav from "@/components/BottomNav.vue";
 import LandingPagehero from "@/components/LandingPageHero.vue.vue";
 
-export default defineComponent({
-  components: {
-    TopNav,
-    BottomNav,
-    LandingPagehero,
-  },
-  setup() {},
+import userModule from "@/stores/userModule";
+
+onMounted(() => {
+  console.log(userModule().getCurrentUser);
+  if (userModule().getCurrentUser) {
+    console.log(12);
+  }
 });
 </script>

@@ -16,12 +16,12 @@ const router = createRouter({
     {
       path: "/login",
       name: "Login",
-      component: () => import("@/views/Login.vue"),
+      component: () => import("@/views/LoginPage.vue"),
     },
     {
       path: "/register",
       name: "Register",
-      component: () => import("@/views/Register.vue"),
+      component: () => import("@/views/RegisterPage.vue"),
     },
     {
       path: "/user",
@@ -33,11 +33,11 @@ const router = createRouter({
     },
     {
       path: "/garden",
-      name: "Garden",
+      name: "SnakeGarden",
       meta: {
         requiresAuth: true,
       },
-      component: () => import("@/components/Garden.vue"),
+      component: () => import("@/components/SnakeGarden.vue"),
     },
   ],
 });

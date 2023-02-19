@@ -1,22 +1,31 @@
-<!-- <template>
+<template>
   <div class="food">
-    <img :src="require(`../assets/svg/${foodType}`)" alt="white egg alt" />
+    <img :src="getImageUrl(gameFoodTypeFromDefaults)" />
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import { defineProps } from "vue";
 
-// interface ComponentData {}
+const props = defineProps({
+  gameFoodTypeFromDefaults: {
+    type: String,
+    default: "whitegg.svg",
+  },
 
-export default Vue.extend({
-  props: {
-    foodType: {
-      type: String,
-      default: "whitegg.svg",
-    },
+  userCustomFoodType: {
+    type: String,
+    default: null,
   },
 });
+
+const getImageUrl = (name?: string) => {
+  if (props.userCustomFoodType) {
+    return props.userCustomFoodType;
+  }
+
+  return new URL(`../assets/svg/${name}`, import.meta.url).href;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -28,4 +37,4 @@ export default Vue.extend({
     height: 100%;
   }
 }
-</style> -->
+</style>
