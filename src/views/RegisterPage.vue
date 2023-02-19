@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { reactive } from "vue";
-import userModule from "@/stores/userModule";
+import { userModule } from "@/stores/userModule";
 
 interface UserData {
   email: string;

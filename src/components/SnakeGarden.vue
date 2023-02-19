@@ -1,8 +1,7 @@
 <template>
   <div>
-    <Food />
+    <span>Player name: {{ userStore.$state.currentUser.userName }} </span>
 
-    <button @click="reset">reset</button>
     <!-- <select v-show="false" v-model="componentData.intervalSpeed">
       <option :value="200">0.5x speed</option>
       <option :value="133">0.75x speed</option>
@@ -52,14 +51,19 @@
       </div>
     </div>
   </div>
+  <button @click="reset">reset</button>
 </template>
 
 <script setup lang="ts">
+import { userModule } from "@/stores/userModule";
+
 import SnakeHead from "@/components/SnakeHead.vue";
 import SnakeBody from "@/components/SnakeBody.vue";
 import Food from "@/components/Food.vue";
 
 import { reactive, watch, computed, ref, onMounted } from "vue";
+
+const userStore = userModule();
 
 interface ComponentData {
   isSnakeDisabled: boolean;
@@ -123,6 +127,7 @@ const componentData: ComponentData = reactive({
   snake: [],
 });
 
+////
 const snakeHead = ref();
 
 const top = computed(() => {

@@ -1,5 +1,7 @@
+import { ref, watch } from "vue";
 import { defineStore } from "pinia";
 import { auth } from "@/firebase";
+
 import {
   createUserWithEmailAndPassword,
   signOut,
@@ -8,76 +10,110 @@ import {
 } from "firebase/auth";
 import router from "@/router";
 
-interface State {
-  email: string;
-  userName: string;
-  currentUser: any;
-}
+export const userModule = defineStore("userModule", () => {
+  interface User {
+    email: string;
+    userName: string;
+    id: string;
+  }
 
-export default defineStore({
-  id: "counter",
-
-  state: (): State => ({
+  const currentUser = ref<User>({
     email: "",
     userName: "",
-    currentUser: {},
-  }),
+    id: "",
+  });
 
-  getters: {
-    getCurrentUser() {
-      console.log(123, auth.currentUser);
-      return auth.currentUser;
+  const isLoggedIn = ref<boolean>(false);
+
+  if (localStorage.getItem("user")) {
+    currentUser.value = JSON.parse(localStorage.getItem("user") as any);
+  }
+
+  if (localStorage.getItem("isLoggedIn")) {
+    isLoggedIn.value = JSON.parse(localStorage.getItem("isLoggedIn") as any);
+  }
+
+  watch(
+    currentUser,
+    () => {
+      localStorage.setItem("user", JSON.stringify(currentUser.value));
+      console.log("watch from pinia");
     },
-  },
+    { deep: true }
+  );
 
-  actions: {
-    async register(
-      email: string,
-      password: string,
-      displayName: string
-    ): Promise<void> {
-      console.log(email, password, displayName);
+  watch(isLoggedIn, () => {
+    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn.value));
+  });
 
-      try {
-        const userData = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+  const setCurrentUser = () => {
+    console.log("setCurrentUser");
+    return auth.onAuthStateChanged((user: any) => {
+      if (user !== null) {
+        currentUser.value.email = user.email;
+        currentUser.value.userName = user.displayName;
+        currentUser.value.id = user.uid;
 
-        if (userData) {
-          this.email = userData.user.email as string;
-          this.userName = displayName as string;
-
-          auth.currentUser.displayName = this.userName;
-          await updateProfile(auth.currentUser, { displayName });
-        }
-      } catch (e) {
-        console.log(e);
+        isLoggedIn.value = true;
       }
-    },
+    });
+  };
 
-    async login(email: string, password: string): Promise<void> {
-      try {
-        const userData = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
+  const register = async (
+    email: string,
+    password: string,
+    displayName: string
+  ) => {
+    try {
+      const userData = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (userData) {
+        currentUser.value.email = userData.user.email as string;
+        currentUser.value.userName = displayName as string;
+        currentUser.value.id = userData.user.uid;
+
+        await updateProfile(auth.currentUser, { displayName });
+        console.log(
+          auth.currentUser.displayName,
+          "auth.currentUser.displayName"
         );
-
-        if (userData) {
-          this.email = userData.user.email as string;
-          this.currentUser = auth.currentUser;
-          console.log(userData);
-          router.push("garden");
-        }
-      } catch (e) {
-        console.log(e);
+        isLoggedIn.value = true;
       }
-    },
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-    async signOut(): Promise<void> {
-      signOut(auth);
-    },
-  },
+  const login = async (email: string, password: string) => {
+    try {
+      const userData = await signInWithEmailAndPassword(auth, email, password);
+
+      if (userData) {
+        currentUser.value.email = userData.user.email as string;
+        currentUser.value.userName = auth.currentUser.displayName;
+        currentUser.value.id = userData.user.uid;
+
+        isLoggedIn.value = true;
+        router.push("garden");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const logOut = () => {
+    signOut(auth);
+    currentUser.value = {
+      email: "",
+      userName: "",
+      id: "",
+    };
+    isLoggedIn.value = false;
+  };
+
+  return { currentUser, isLoggedIn, login, setCurrentUser, register, logOut };
 });

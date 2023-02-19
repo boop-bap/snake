@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { userModule } from "@/stores/userModule";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,20 @@ const router = createRouter({
       component: () => import("@/components/SnakeGarden.vue"),
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  if (!userModule().$state.isLoggedIn) {
+    router.push("login");
+  }
+  if (
+    userModule().$state.isLoggedIn &&
+    (to.name === "Login" || to.name === "Register")
+  ) {
+    router.push("garden");
+  }
+
+  next();
 });
 
 export default router;
