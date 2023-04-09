@@ -23,38 +23,33 @@ export const userModule = defineStore("userModule", () => {
     id: "",
   });
 
-  const isLoggedIn = ref<boolean>(false);
+  console.log("usermodule");
 
   if (localStorage.getItem("user")) {
-    currentUser.value = JSON.parse(localStorage.getItem("user") as any);
+    const userFromLocal = JSON.parse(localStorage.getItem("user") as string);
+    const { email, displayName, uid } = userFromLocal.user;
+
+    currentUser.value.email = email;
+    currentUser.value.userName = displayName;
+    currentUser.value.id = uid;
   }
 
-  if (localStorage.getItem("isLoggedIn")) {
-    isLoggedIn.value = JSON.parse(localStorage.getItem("isLoggedIn") as any);
-  }
-
-  watch(
-    currentUser,
-    () => {
-      localStorage.setItem("user", JSON.stringify(currentUser.value));
-      console.log("watch from pinia");
-    },
-    { deep: true }
-  );
-
-  watch(isLoggedIn, () => {
-    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn.value));
-  });
+  // watch(
+  //   currentUser,
+  //   () => {
+  //     localStorage.setItem("user", JSON.stringify(currentUser.value));
+  //     console.log("watch from pinia");
+  //   },
+  //   { deep: true }
+  // );
 
   const setCurrentUser = () => {
     console.log("setCurrentUser");
     return auth.onAuthStateChanged((user: any) => {
-      if (user !== null) {
+      if (user) {
         currentUser.value.email = user.email;
         currentUser.value.userName = user.displayName;
         currentUser.value.id = user.uid;
-
-        isLoggedIn.value = true;
       }
     });
   };
@@ -81,7 +76,6 @@ export const userModule = defineStore("userModule", () => {
           auth.currentUser.displayName,
           "auth.currentUser.displayName"
         );
-        isLoggedIn.value = true;
       }
     } catch (e) {
       console.log(e);
@@ -97,7 +91,8 @@ export const userModule = defineStore("userModule", () => {
         currentUser.value.userName = auth.currentUser.displayName;
         currentUser.value.id = userData.user.uid;
 
-        isLoggedIn.value = true;
+        window.localStorage.setItem("user", JSON.stringify(userData));
+
         router.push("garden");
       }
     } catch (e) {
@@ -112,8 +107,9 @@ export const userModule = defineStore("userModule", () => {
       userName: "",
       id: "",
     };
-    isLoggedIn.value = false;
+    window.localStorage.removeItem("user");
+    router.push("snake");
   };
 
-  return { currentUser, isLoggedIn, login, setCurrentUser, register, logOut };
+  return { currentUser, login, setCurrentUser, register, logOut };
 });

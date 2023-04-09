@@ -1,77 +1,29 @@
-<!-- <template>
-  <div class="user-info">
+<template>
+  <div class="h-[calc(100vh-64px)] user-info">
     <h1>User information</h1>
-    <div class="user-form">
-      <input type="email" placeholder="Email" v-bind="user.email" />
-      <input type="text" placeholder="In-game name" v-bind="user.name" />
+    <div class="user-info__main">
+      <p>Email: {{ userStore.currentUser.email }}</p>
+      <p>DisplayName: {{ userStore.currentUser.userName }}</p>
     </div>
-    <div class="user-statistics">User statistics</div>
+    <br />
+    <div class="user-statistics">User statistics add later</div>
   </div>
 </template>
 
-<script lang="ts">
-import firebase from "firebase";
-import Vue from "vue";
+<script setup lang="ts">
+import { userModule } from "@/stores/userModule";
 
-interface ComponentData {
-  user: {
-    name: string;
-    email: string;
-    password: string;
-  };
-}
-
-export default Vue.extend({
-  components: {},
-
-  data(): ComponentData {
-    return {
-      user: {
-        name: "",
-        email: "",
-        password: "",
-      },
-    };
-  },
-
-  computed: {},
-
-  created() {
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
-    });
-  },
-
-  methods: {
-    userRegistration() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.user.email, this.user.password)
-        .then((res) => {
-          res.user
-            .updateProfile({
-              displayName: this.user.name,
-            })
-            .then(() => {
-              this.$router.push("/login");
-            });
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    },
-  },
-});
+const userStore = userModule();
 </script>
 
 <style lang="scss" scoped>
-.register {
+.user-info {
   width: 500px;
   height: 500px;
   background: grey;
-  .register-form {
+  &__main {
     display: flex;
     flex-direction: column;
   }
 }
-</style> -->
+</style>

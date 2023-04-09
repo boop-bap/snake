@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <span>Player name: {{ userStore.$state.currentUser.userName }} </span>
+  <div class="h-[calc(100vh-144px)]">
+    <div class="pt-8 flex flex-wrap justify-center gap-4">
+      <span>Player name: {{ userStore.currentUser.userName }} </span>
+      <span class="flex">Score:{{ playerScore }} <Food /></span>
+    </div>
 
     <!-- <select v-show="false" v-model="componentData.intervalSpeed">
       <option :value="200">0.5x speed</option>
@@ -50,8 +53,8 @@
         <SnakeBody />
       </div>
     </div>
+    <button @click="reset">reset</button>
   </div>
-  <button @click="reset">reset</button>
 </template>
 
 <script setup lang="ts">
@@ -61,7 +64,7 @@ import SnakeHead from "@/components/SnakeHead.vue";
 import SnakeBody from "@/components/SnakeBody.vue";
 import Food from "@/components/Food.vue";
 
-import { reactive, watch, computed, ref, onMounted } from "vue";
+import { reactive, watch, computed, ref } from "vue";
 
 const userStore = userModule();
 
@@ -147,10 +150,13 @@ const currentPosition = computed(() => {
   );
 });
 
+let playerScore = ref(0);
+
 ////
+
 watch(
   componentData.snakeHeadPosition,
-  (val, oldValue) => {
+  (val) => {
     //Trying to escape this prison
     if (val.x > 475 || val.x < 0 || val.y > 475 || val.y < 0) {
       stopAll();
@@ -159,6 +165,8 @@ watch(
 
     if (JSON.stringify(val) === JSON.stringify(componentData.foodPosition)) {
       componentData.snakeLength += 100;
+      playerScore.value++;
+
       reRunFoodInterval();
     }
 
@@ -219,6 +227,8 @@ const stopAll = () => {
 };
 
 const reset = () => {
+  playerScore.value = 0;
+
   stopAll();
   componentData.snakeHeadPosition = {
     x: 0,
@@ -341,7 +351,7 @@ const stopInterval = (interval: any) => {
 <style lang="scss" scoped>
 .garden {
   background: cornflowerblue;
-  z-index: 10000;
+  z-index: 0;
   position: relative;
   margin: 0 auto;
 }
