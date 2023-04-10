@@ -59,7 +59,6 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.meta.requiresAuth && !user) {
     router.push("snake");
-    next();
   }
 
   if ((to.path === "/login" || to.path === "/register") && user) {

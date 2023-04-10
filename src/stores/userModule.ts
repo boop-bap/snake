@@ -1,4 +1,3 @@
-import { ref, watch } from "vue";
 import { defineStore } from "pinia";
 import { auth } from "@/firebase";
 
@@ -17,11 +16,11 @@ export const userModule = defineStore("userModule", () => {
     id: string;
   }
 
-  const currentUser = ref<User>({
+  const currentUser = {
     email: "",
     userName: "",
     id: "",
-  });
+  };
 
   console.log("usermodule");
 
@@ -29,27 +28,18 @@ export const userModule = defineStore("userModule", () => {
     const userFromLocal = JSON.parse(localStorage.getItem("user") as string);
     const { email, displayName, uid } = userFromLocal.user;
 
-    currentUser.value.email = email;
-    currentUser.value.userName = displayName;
-    currentUser.value.id = uid;
+    currentUser.email = email;
+    currentUser.userName = displayName;
+    currentUser.id = uid;
   }
-
-  // watch(
-  //   currentUser,
-  //   () => {
-  //     localStorage.setItem("user", JSON.stringify(currentUser.value));
-  //     console.log("watch from pinia");
-  //   },
-  //   { deep: true }
-  // );
 
   const setCurrentUser = () => {
     console.log("setCurrentUser");
     return auth.onAuthStateChanged((user: any) => {
       if (user) {
-        currentUser.value.email = user.email;
-        currentUser.value.userName = user.displayName;
-        currentUser.value.id = user.uid;
+        currentUser.email = user.email;
+        currentUser.userName = user.displayName;
+        currentUser.id = user.uid;
       }
     });
   };
@@ -67,15 +57,16 @@ export const userModule = defineStore("userModule", () => {
       );
 
       if (userData) {
-        currentUser.value.email = userData.user.email as string;
-        currentUser.value.userName = displayName as string;
-        currentUser.value.id = userData.user.uid;
+        currentUser.email = userData.user.email as string;
+        currentUser.userName = displayName as string;
+        currentUser.id = userData.user.uid;
 
-        await updateProfile(auth.currentUser, { displayName });
-        console.log(
-          auth.currentUser.displayName,
-          "auth.currentUser.displayName"
-        );
+        window.localStorage.setItem("user", JSON.stringify(userData));
+        const user = auth.currentUser as any;
+
+        await updateProfile(user as any, { displayName });
+
+        router.push("garden");
       }
     } catch (e) {
       console.log(e);
@@ -87,9 +78,9 @@ export const userModule = defineStore("userModule", () => {
       const userData = await signInWithEmailAndPassword(auth, email, password);
 
       if (userData) {
-        currentUser.value.email = userData.user.email as string;
-        currentUser.value.userName = auth.currentUser.displayName;
-        currentUser.value.id = userData.user.uid;
+        currentUser.email = userData.user.email as string;
+        currentUser.userName = userData.user.displayName as string;
+        currentUser.id = userData.user.uid as string;
 
         window.localStorage.setItem("user", JSON.stringify(userData));
 
@@ -102,11 +93,9 @@ export const userModule = defineStore("userModule", () => {
 
   const logOut = () => {
     signOut(auth);
-    currentUser.value = {
-      email: "",
-      userName: "",
-      id: "",
-    };
+    currentUser.email = "";
+    currentUser.userName = "";
+    currentUser.id = "";
     window.localStorage.removeItem("user");
     router.push("snake");
   };

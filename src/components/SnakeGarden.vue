@@ -53,7 +53,20 @@
         <SnakeBody />
       </div>
     </div>
-    <button @click="reset">reset</button>
+    <div class="flex justify-center mt-2">
+      <button
+        class="bg-red-500 text-white font-bold py-2 px-4 rounded mr-2"
+        @click="reset"
+      >
+        Reset
+      </button>
+      <button
+        class="bg-green-500 text-white font-bold py-2 px-4 rounded"
+        @click="submitScore"
+      >
+        Submit score
+      </button>
+    </div>
   </div>
 </template>
 
@@ -64,7 +77,8 @@ import SnakeHead from "@/components/SnakeHead.vue";
 import SnakeBody from "@/components/SnakeBody.vue";
 import Food from "@/components/Food.vue";
 
-import { reactive, watch, computed, ref } from "vue";
+import { reactive, watch, computed, ref, onBeforeMount } from "vue";
+import { firestore, getDoc, setDoc, doc } from "@/firebase";
 
 const userStore = userModule();
 
@@ -132,6 +146,10 @@ const componentData: ComponentData = reactive({
 
 ////
 const snakeHead = ref();
+
+onBeforeMount(() => {
+  getPlayerScore();
+});
 
 const top = computed(() => {
   return componentData.snakeHeadPosition.y + "px";
@@ -345,6 +363,22 @@ const removeSnake = () => {
 
 const stopInterval = (interval: any) => {
   clearInterval(interval);
+};
+
+const getPlayerScore = async () => {
+  const docRef = doc(firestore, "scores", userStore.currentUser.id);
+  playerScore.value = ((await getDoc(docRef)).data() as any)?.score ?? 0;
+};
+
+const submitScore = async () => {
+  const docRef = doc(firestore, "scores", userStore.currentUser.id);
+
+  const data = {
+    score: playerScore.value,
+    playerName: userStore.currentUser.userName,
+  };
+
+  await setDoc(docRef, data);
 };
 </script>
 
