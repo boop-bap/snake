@@ -1,4 +1,4 @@
-# snake
+A working snake game built with as little googling as possible.
 
 This template should help get you started developing with Vue 3 in Vite.
 
